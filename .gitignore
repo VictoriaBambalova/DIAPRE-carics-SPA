@@ -9,5 +9,5 @@ venv/
 .vscode/
 .DS_Store
 
-# Environment variables (за по-късно)
+# Environment variables
 .env

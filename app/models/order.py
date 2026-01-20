@@ -2,10 +2,7 @@ from datetime import datetime
 
 
 class Order:
-    """
-    Domain (business) class.
-    Represents an order in the system without direct DB logic.
-    """
+   
 
     VALID_STATUSES = {"created", "in_progress", "completed", "cancelled"}
 
