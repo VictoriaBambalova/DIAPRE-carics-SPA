@@ -12,6 +12,10 @@ def create_app():
     from app.models.caricature_model import CaricatureModel  # noqa: F401
     from app.models.order_model import OrderModel  # noqa: F401
 
+    from app.routes.auth import auth_bp
+    app.register_blueprint(auth_bp)
 
+    from app.routes.catalog import catalog_bp
+    app.register_blueprint(catalog_bp)
 
     return app

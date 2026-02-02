@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Catalog</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+        .card { border: 1px solid #ddd; border-radius: 6px; padding: 12px; }
+        .card img { max-width: 100%; height: auto; display: block; margin-bottom: 8px; }
+        .price { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Catalog</h1>
+
+    {% if caricatures %}
+        <div class="grid">
+            {% for c in caricatures %}
+                <div class="card">
+                    {% if c.template_image_path %}
+                        {% set img = c.template_image_path|replace('\\', '/') %}
+                        {% if '/static/' in img %}
+                            {% set img = img[img.find('/static/') + 8:] %}
+                        {% endif %}
+                        {% set img = img.lstrip('/') %}
+                        <img src="{{ url_for('static', filename=img) }}" alt="{{ c.title }}">
+                    {% endif %}
+
+                    <h3>{{ c.title }}</h3>
+                    {% if c.description %}
+                        {% if c.description|length > 200 %}
+                            <p>{{ c.description[:200] }}...</p>
+                        {% else %}
+                            <p>{{ c.description }}</p>
+                        {% endif %}
+                    {% endif %}
+                    <p class="price">${{ '%.2f'|format(c.base_price) }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No caricatures yet.</p>
+    {% endif %}
+</body>
+</html>

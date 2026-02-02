@@ -1,3 +1,4 @@
+from flask import render_template
 from app import create_app
 from app.extensions import db
 from app.models.user_model import UserModel
@@ -10,7 +11,7 @@ app = create_app()
 
 @app.route("/")
 def home():
-    return "Caricature Shop backend is running"
+    return render_template("home.html")
 
 
 @app.route("/db-check")
@@ -30,10 +31,12 @@ def caricatures_count():
     count = CaricatureModel.query.count()
     return {"caricatures_count": count}
 
+
 @app.route("/orders-count")
 def orders_count():
     count = OrderModel.query.count()
     return {"orders_count": count}
+
 
 if __name__ == "__main__":
     app.run(debug=True)
