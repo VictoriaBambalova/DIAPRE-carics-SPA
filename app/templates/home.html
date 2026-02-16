@@ -1,20 +1,9 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home</title>
-</head>
-<body>
-    <h1>Caricature Shop</h1>
-
-    {% if session.get("user_id") %}
-        <p>Logged in as: {{ session.get("user_email") }}</p>
-        <a href="{{ url_for('auth.logout') }}">Logout</a>
-    {% else %}
-        <a href="{{ url_for('auth.login') }}">Login</a>
-        <br>
-        <a href="{{ url_for('auth.register') }}">Register</a>
-    {% endif %}
-</body>
-</html>
+﻿<section class="hero">
+    <div class="hero-images">
+        <img class="hero-img hero-left" src="{{ url_for('static', filename='images/templates/late_night_coder.jpg') }}" alt="Caricature example">
+        <img class="hero-img hero-center" src="{{ url_for('static', filename='images/templates/late_night_coder.jpg') }}" alt="Caricature example">
+        <img class="hero-img hero-right" src="{{ url_for('static', filename='images/templates/late_night_coder.jpg') }}" alt="Caricature example">
+    </div>
+    <h2>Подаръци за всеки повод!</h2>
+    <a class="cta" href="/catalog" data-spa="true">КАТАЛОГ</a>
+</section>

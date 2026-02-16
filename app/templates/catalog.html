@@ -1,24 +1,14 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Catalog</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
-        .card { border: 1px solid #ddd; border-radius: 6px; padding: 12px; }
-        .card img { max-width: 100%; height: auto; display: block; margin-bottom: 8px; }
-        .price { font-weight: bold; }
-    </style>
-</head>
-<body>
-    <h1>Catalog</h1>
+<section class="catalog">
+    <h2>Catalog</h2>
+
+    {% if query %}
+        <p class="catalog-query">Results for: "{{ query }}"</p>
+    {% endif %}
 
     {% if caricatures %}
-        <div class="grid">
+        <div class="catalog-grid">
             {% for c in caricatures %}
-                <div class="card">
+                <div class="catalog-card">
                     {% if c.template_image_path %}
                         {% set img = c.template_image_path|replace('\\', '/') %}
                         {% if '/static/' in img %}
@@ -43,5 +33,4 @@
     {% else %}
         <p>No caricatures yet.</p>
     {% endif %}
-</body>
-</html>
+</section>

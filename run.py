@@ -1,4 +1,3 @@
-from flask import render_template
 from app import create_app
 from app.extensions import db
 from app.models.user_model import UserModel
@@ -7,11 +6,6 @@ from app.models.order_model import OrderModel
 
 
 app = create_app()
-
-
-@app.route("/")
-def home():
-    return render_template("home.html")
 
 
 @app.route("/db-check")

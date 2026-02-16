@@ -15,7 +15,7 @@ def create_app():
     from app.routes.auth import auth_bp
     app.register_blueprint(auth_bp)
 
-    from app.routes.catalog import catalog_bp
-    app.register_blueprint(catalog_bp)
+    from app.routes.ui import ui_bp
+    app.register_blueprint(ui_bp)
 
     return app

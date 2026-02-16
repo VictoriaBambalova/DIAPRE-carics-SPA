@@ -1,0 +1,88 @@
+﻿<section class="auth-wrap">
+    <div class="auth-card" data-mode="login">
+        <h2 class="auth-title" data-title-login="Log In" data-title-register="Create account">Log In</h2>
+        <p class="auth-subtitle">Enter your credentials to continue</p>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="auth-messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form class="auth-form auth-form-login" method="post" action="/login">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" name="email" placeholder="Email" required>
+
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" name="password" placeholder="Password" required>
+
+            <div class="auth-row">
+                <label class="remember">
+                    <input type="checkbox" name="remember">
+                    <span>Remember me</span>
+                </label>
+                <a class="auth-link" href="#" aria-label="Forgot password">Forgot password?</a>
+            </div>
+
+            <button class="auth-btn" type="submit">Log In</button>
+        </form>
+
+        <form class="auth-form auth-form-register" method="post" action="/register">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" name="email" placeholder="Email" required>
+
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" name="password" placeholder="Password" required>
+
+            <label for="register-confirm">Confirm Password</label>
+            <input type="password" id="register-confirm" name="confirm" placeholder="Confirm Password" required>
+
+            <button class="auth-btn" type="submit">Create account</button>
+        </form>
+
+        <p class="auth-switch">
+            <span class="switch-login">Don't have an account?</span>
+            <span class="switch-register">Already have an account?</span>
+            <a href="#" class="auth-toggle">Create one</a>
+        </p>
+    </div>
+</section>
+
+<script>
+(() => {
+    const card = document.querySelector(".auth-card");
+    if (!card) return;
+    const toggle = card.querySelector(".auth-toggle");
+    const title = card.querySelector(".auth-title");
+    const subtitle = card.querySelector(".auth-subtitle");
+    const switchLogin = card.querySelector(".switch-login");
+    const switchRegister = card.querySelector(".switch-register");
+
+    const setMode = (mode) => {
+        card.dataset.mode = mode;
+        if (mode === "login") {
+            title.textContent = title.dataset.titleLogin;
+            subtitle.textContent = "Enter your credentials to continue";
+            toggle.textContent = "Create one";
+            if (switchLogin) switchLogin.style.display = "inline";
+            if (switchRegister) switchRegister.style.display = "none";
+        } else {
+            title.textContent = title.dataset.titleRegister;
+            subtitle.textContent = "Create an account to get started";
+            toggle.textContent = "Log in";
+            if (switchLogin) switchLogin.style.display = "none";
+            if (switchRegister) switchRegister.style.display = "inline";
+        }
+    };
+
+    setMode("login");
+    toggle.addEventListener("click", (event) => {
+        event.preventDefault();
+        setMode(card.dataset.mode === "login" ? "register" : "login");
+    });
+})();
+</script>

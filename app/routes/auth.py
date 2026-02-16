@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, jsonify, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.extensions import db
@@ -8,58 +8,51 @@ from app.models.user_model import UserModel
 auth_bp = Blueprint("auth", __name__)
 
 
-@auth_bp.route("/register", methods=["GET", "POST"])
+@auth_bp.route("/api/auth/register", methods=["POST"])
 def register():
-    if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "")
-        confirm = request.form.get("confirm", "")
+    email = request.form.get("email", "").strip().lower()
+    password = request.form.get("password", "")
+    confirm = request.form.get("confirm", "")
 
-        if not email or not password:
-            flash("Email and password are required.")
-            return render_template("register.html")
+    if not email or not password:
+        return jsonify({"message": "Email and password are required."}), 400
 
-        if password != confirm:
-            flash("Passwords do not match.")
-            return render_template("register.html")
+    if password != confirm:
+        return jsonify({"message": "Passwords do not match."}), 400
 
-        existing_user = UserModel.query.filter_by(email=email).first()
-        if existing_user:
-            flash("An account with this email already exists.")
-            return render_template("register.html")
+    existing_user = UserModel.query.filter_by(email=email).first()
+    if existing_user:
+        return jsonify({"message": "An account with this email already exists."}), 400
 
-        password_hash = generate_password_hash(password, method="pbkdf2:sha256", salt_length=16)
-        user = UserModel(email=email, password_hash=password_hash, is_admin=False)
-        db.session.add(user)
-        db.session.commit()
+    password_hash = generate_password_hash(password, method="pbkdf2:sha256", salt_length=16)
+    user = UserModel(email=email, password_hash=password_hash, is_admin=False)
+    db.session.add(user)
+    db.session.commit()
 
-        flash("Registration successful. Please log in.")
-        return redirect(url_for("auth.login"))
+    return jsonify(
+        {
+            "ok": True,
+            "message": "Registration successful. Please log in.",
+            "redirect": "/auth",
+        }
+    )
 
-    return render_template("register.html")
 
-
-@auth_bp.route("/login", methods=["GET", "POST"])
+@auth_bp.route("/api/auth/login", methods=["POST"])
 def login():
-    if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "")
+    email = request.form.get("email", "").strip().lower()
+    password = request.form.get("password", "")
 
-        user = UserModel.query.filter_by(email=email).first()
-        if not user or not check_password_hash(user.password_hash, password):
-            flash("Invalid email or password.")
-            return render_template("login.html")
+    user = UserModel.query.filter_by(email=email).first()
+    if not user or not check_password_hash(user.password_hash, password):
+        return jsonify({"message": "Invalid email or password."}), 401
 
-        session["user_id"] = user.id
-        session["user_email"] = user.email
-        flash("You are now logged in.")
-        return redirect(url_for("home"))
-
-    return render_template("login.html")
+    session["user_id"] = user.id
+    session["user_email"] = user.email
+    return jsonify({"ok": True, "message": "You are now logged in.", "redirect": "/"})
 
 
-@auth_bp.route("/logout")
+@auth_bp.route("/api/auth/logout", methods=["POST"])
 def logout():
     session.clear()
-    flash("You have been logged out.")
-    return redirect(url_for("auth.login"))
+    return jsonify({"ok": True, "message": "You have been logged out.", "redirect": "/"})

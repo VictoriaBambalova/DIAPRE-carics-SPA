@@ -1,0 +1,8 @@
+<section class="page">
+    <h2>Profile</h2>
+    <p>Logged in as: {{ session.get("user_email") }}</p>
+    <form method="post" action="/api/auth/logout" data-spa-form="true">
+        <button type="submit">Logout</button>
+        <p class="form-feedback" data-form-feedback aria-live="polite"></p>
+    </form>
+</section>
