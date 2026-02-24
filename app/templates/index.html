@@ -11,16 +11,18 @@
         <button class="icon-btn" id="menuBtn" aria-label="Open menu">&#9776;</button>
         <div class="brand">DIAPRE</div>
         <div class="topbar-actions">
-            <a class="icon-btn" href="/cart" data-spa="true" aria-label="Cart">&#128722;</a>
+            <a class="icon-btn" id="cartLink" href="/cart" data-spa="true" aria-label="Cart">&#128722;</a>
             <button class="icon-btn" id="searchBtn" aria-label="Search">&#128269;</button>
             <a class="icon-btn" id="profileLink" href="/auth" data-spa="true" aria-label="Profile">&#128100;</a>
         </div>
     </header>
 
     <nav class="sidebar" id="sidebar">
-        <a href="/catalog" data-spa="true">Каталог</a>
-        <a href="/about" data-spa="true">За нас</a>
-        <a href="/contacts" data-spa="true">Контакти</a>
+        <a href="/catalog" data-spa="true">Catalog</a>
+        <a href="/profile" data-spa="true">Profile</a>
+        <a href="/admin" data-spa="true">Admin</a>
+        <a href="/about" data-spa="true">About</a>
+        <a href="/contacts" data-spa="true">Contacts</a>
     </nav>
 
     <div class="overlay" id="overlay"></div>
@@ -36,6 +38,6 @@
 
     <main id="app"></main>
 
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
