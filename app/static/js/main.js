@@ -279,7 +279,11 @@ const submitAuthForm = async (form) => {
             result = await register(formData);
         } else if (action === "/api/auth/forgot-password") {
             result = await forgotPassword(formData);
-            setFormFeedback(form, result?.message || "If an account exists, reset instructions were sent.", "success");
+            const resetUrl = result?.data?.reset_url
+                || (result?.data?.token ? `/reset-password?token=${result.data.token}` : "");
+            const baseMessage = result?.message || "If an account exists, reset instructions were sent.";
+            const message = resetUrl ? `${baseMessage} Reset link: ${resetUrl}` : baseMessage;
+            setFormFeedback(form, message, "success");
             return;
         } else if (action === "/api/auth/reset-password") {
             const password = String(formData.get("password") || "");

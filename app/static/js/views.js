@@ -68,16 +68,44 @@ export const renderHome = () => `
 `;
 
 export const renderAbout = () => `
-    <section class="page">
-        <h2>About</h2>
-        <p>Placeholder page.</p>
+    <section class="page about-page">
+        <div class="about-hero">
+            <div class="about-text">
+                <h2>About DIAPRE</h2>
+                <p>DIAPRE is a personal art catalog created by me, <strong>Viktoria Bambalova</strong>, as a space where I can share my artwork and connect with people through creativity. The idea behind this website is simple: to present my caricatures and illustrations in one place and make it easier for people to discover, enjoy, and request personalized pieces.</p>
+                <p>Art has always been my way of expressing ideas, emotions, and humor. Through my caricatures, I try to capture the unique character of people and turn everyday moments into something memorable and joyful. Each drawing is created with attention to detail and with the intention of bringing a smile to someone’s face.</p>
+                <p>My mission is to <strong>spread positivity and create smiles</strong> through art. I believe that a good caricature is more than just a drawing — it is a small story, a memory, and sometimes even a gift that people keep for years.</p>
+                <p>Another important part of my work is helping people <strong>materialize their ideas</strong>. Whether it is a gift, a special event, or simply a fun concept someone has in mind, I enjoy turning those ideas into visual creations that feel personal and meaningful.</p>
+                <p>This website is not only a catalog of my work, but also a place where creativity, humor, and individuality meet. I hope my art can bring a little more joy, laughter, and inspiration to everyone who visits.</p>
+            </div>
+            <div class="about-photo">
+                <img src="/static/images/otherphotos/me.png" alt="Viktoria Bambalova">
+            </div>
+        </div>
     </section>
 `;
 
 export const renderContacts = () => `
-    <section class="page">
-        <h2>Contacts</h2>
-        <p>Placeholder page.</p>
+    <section class="page contacts-page">
+        <div class="contacts-hero">
+            <div class="contacts-text">
+                <h2>Contacts</h2>
+                <p>If you would like to stay up to date with my latest work, the best place to follow is the official <strong>DIAPRE Instagram page</strong>. There I regularly publish my newest caricatures, sketches, and creative projects. By following the page, you can always stay in touch with the most recent artworks and see what I am currently working on.</p>
+                <div class="contacts-image-block">
+                    <img src="/static/images/otherphotos/instafeed1.png" alt="DIAPRE Instagram preview">
+                </div>
+                <p>Instagram is also the easiest way to <strong>contact me directly</strong>. If you have an idea for a caricature, a personalized gift, or a special project, you can send me a message there and we can discuss your concept together. I enjoy turning people's ideas into creative and memorable illustrations, so feel free to reach out.</p>
+                <div class="contacts-image-block">
+                    <img src="/static/images/otherphotos/instafeed2.png" alt="DIAPRE Instagram gallery">
+                </div>
+                <p>You can visit and follow the page here:</p>
+                <p><a href="https://www.instagram.com/digital.art.presents/" target="_blank" rel="noreferrer">https://www.instagram.com/digital.art.presents/</a></p>
+                <p>Finally, I am currently preparing a <strong>new project called <em>CarArt</em></strong>. Some previews are already visible on the Instagram page, but very soon the project will also be <strong>available for orders directly through this website</strong>. Stay tuned!</p>
+                <div class="contacts-image-block">
+                    <img src="/static/images/otherphotos/newproduct.png" alt="CarArt preview">
+                </div>
+            </div>
+        </div>
     </section>
 `;
 

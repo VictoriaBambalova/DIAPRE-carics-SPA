@@ -1,4 +1,6 @@
-from flask import Blueprint, request, session
+from urllib.parse import urlencode
+
+from flask import Blueprint, request, session, current_app
 
 from app.services.auth_service import (
     login_user,
@@ -49,12 +51,32 @@ def logout():
 @auth_bp.route("/api/auth/forgot-password", methods=["POST"])
 def forgot_password():
     try:
+        email = request.form.get("email", "")
         reset_base_url = f"{request.url_root.rstrip('/')}/reset-password"
-        data, message = request_password_reset(
-            email=request.form.get("email", ""),
-            include_token=False,
-            reset_base_url=reset_base_url,
+        smtp_ready = all(
+            [
+                current_app.config.get("SMTP_HOST"),
+                current_app.config.get("SMTP_USER"),
+                current_app.config.get("SMTP_PASSWORD"),
+                current_app.config.get("SMTP_FROM") or current_app.config.get("SMTP_USER"),
+            ]
         )
+
+        if smtp_ready:
+            data, message = request_password_reset(
+                email=email,
+                include_token=False,
+                reset_base_url=reset_base_url,
+            )
+        else:
+            data, message = request_password_reset(
+                email=email,
+                include_token=True,
+                reset_base_url=None,
+            )
+            if data.get("token"):
+                data["reset_url"] = f"{reset_base_url}?{urlencode({'token': data['token']})}"
+                message = "SMTP is not configured. Use the reset link below to continue."
         return ok(data, message)
     except ServiceError as exc:
         return error(exc.code, exc.message, exc.status)
