@@ -58,9 +58,9 @@ export const renderNotFound = () => `
 export const renderHome = () => `
     <section class="hero">
         <div class="hero-images">
-            <img class="hero-img hero-left" src="/static/images/templates/late_night_coder.jpg" alt="Caricature example">
-            <img class="hero-img hero-center" src="/static/images/templates/late_night_coder.jpg" alt="Caricature example">
-            <img class="hero-img hero-right" src="/static/images/templates/late_night_coder.jpg" alt="Caricature example">
+            <img class="hero-img hero-left" src="/static/images/templates/c1.png" alt="DIAPRE caricature example">
+            <img class="hero-img hero-center" src="/static/images/templates/c2.png" alt="DIAPRE caricature example">
+            <img class="hero-img hero-right" src="/static/images/templates/c3.png" alt="DIAPRE caricature example">
         </div>
         <h2>Gifts for every occasion!</h2>
         <a class="cta" href="/catalog" data-spa="true">CATALOG</a>
@@ -296,7 +296,7 @@ const renderCaricatureCard = (
     `;
 };
 
-export const renderProfile = (email, favorites = { items: [], loading: false, error: null }) => `
+export const renderProfile = (email, favorites = { items: [], loading: false, error: null }, isAdmin = false) => `
     <section class="page">
         <h2>Profile</h2>
         <p>Logged in as: ${escapeHtml(email || "")}</p>
@@ -304,32 +304,50 @@ export const renderProfile = (email, favorites = { items: [], loading: false, er
             <button type="submit">Logout</button>
             <p class="form-feedback" data-form-feedback aria-live="polite"></p>
         </form>
-        <h3>Favorites</h3>
         ${
-            favorites.loading
-                ? '<p class="loading">Loading favorites...</p>'
-                : favorites.error
-                    ? `<p class="error-text">${escapeHtml(favorites.error)}</p>`
-                    : favorites.items.length
-                        ? `
-                    <div class="catalog-grid">
-                        ${favorites.items
-                            .map((item) =>
-                                renderCaricatureCard(item, {
-                                    cardId: item.caricature_id,
-                                    isAdmin: false,
-                                    authenticated: true,
-                                    showPriceControls: false,
-                                    showActions: true,
-                                    showCommentForm: true,
-                                    showLoginNote: false,
-                                    canDeleteComments: false,
-                                })
-                            )
-                            .join("")}
-                    </div>
-                `
-                        : "<p>No favorites yet.</p>"
+            isAdmin
+                ? `
+                <div class="admin-panel">
+                    <h3>Admin tools</h3>
+                    <p><a href="/catalog" data-spa="true">Manage caricature prices</a></p>
+                    <p><a href="/admin/orders" data-spa="true">View all orders</a></p>
+                    <p><a href="/admin/users" data-spa="true">Manage users</a></p>
+                </div>
+            `
+                : ""
+        }
+        ${
+            isAdmin
+                ? ""
+                : `
+                <h3>Favorites</h3>
+                ${
+                    favorites.loading
+                        ? '<p class="loading">Loading favorites...</p>'
+                        : favorites.error
+                            ? `<p class="error-text">${escapeHtml(favorites.error)}</p>`
+                            : favorites.items.length
+                                ? `
+                            <div class="catalog-grid">
+                                ${favorites.items
+                                    .map((item) =>
+                                        renderCaricatureCard(item, {
+                                            cardId: item.caricature_id,
+                                            isAdmin: false,
+                                            authenticated: true,
+                                            showPriceControls: false,
+                                            showActions: true,
+                                            showCommentForm: true,
+                                            showLoginNote: false,
+                                            canDeleteComments: false,
+                                        })
+                                    )
+                                    .join("")}
+                            </div>
+                        `
+                                : "<p>No favorites yet.</p>"
+                }
+            `
         }
     </section>
 `;

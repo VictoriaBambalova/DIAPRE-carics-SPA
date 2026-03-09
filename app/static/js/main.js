@@ -97,14 +97,10 @@ const setFormLoading = (form, loading) => {
 const updateAuthUI = () => {
     const session = getState().session;
     if (profileLink) {
-        if (!session.authenticated) {
-            profileLink.href = "/auth";
-        } else {
-            profileLink.href = session.is_admin ? "/admin" : "/profile";
-        }
+        profileLink.href = session.authenticated ? "/profile" : "/auth";
     }
     if (cartLink) {
-        cartLink.href = session.is_admin ? "/admin/orders" : "/cart";
+        cartLink.href = "/cart";
     }
 };
 
@@ -123,7 +119,7 @@ const render = () => {
         html = renderResetPassword({ tokenMissing: !token });
     }
     if (route.path === "/register") html = renderRegister();
-    if (route.path === "/profile") html = renderProfile(session.email, favorites);
+    if (route.path === "/profile") html = renderProfile(session.email, favorites, session.is_admin);
     if (route.path === "/admin") html = renderAdminHome(session.email);
     if (route.path === "/catalog") {
         html = renderCatalog({

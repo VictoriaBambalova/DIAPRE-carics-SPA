@@ -345,6 +345,18 @@ main {
     color: #065f46;
 }
 
+.admin-panel {
+    margin: 18px 0 22px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #fafafa;
+}
+
+.admin-panel h3 {
+    margin-top: 0;
+}
+
 .switch-register {
     display: none;
 }
@@ -363,8 +375,8 @@ main {
 }
 
 .hero-img {
-    width: 180px;
-    max-width: 45vw;
+    width: 320px;
+    max-width: 80vw;
     border-radius: 8px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
