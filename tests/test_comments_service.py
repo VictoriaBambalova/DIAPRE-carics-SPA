@@ -1,7 +1,7 @@
 import pytest
 
-from app.services.common import ServiceError
 from app.services import comments_service
+from app.services.comments_service import ServiceError
 
 
 class DummySession:
@@ -29,17 +29,20 @@ def _patch_db_session(monkeypatch):
     return session
 
 
-def _patch_caricature_get(monkeypatch, result):
+def _patch_caricature_model(monkeypatch, result):
     class DummyQuery:
         @staticmethod
         def get(_):
             return result
 
-    monkeypatch.setattr(comments_service.CaricatureModel, "query", DummyQuery())
+    class DummyCaricatureModel:
+        query = DummyQuery()
+
+    monkeypatch.setattr(comments_service, "CaricatureModel", DummyCaricatureModel)
 
 
 def test_add_comment_success(monkeypatch):
-    _patch_caricature_get(monkeypatch, result=object())
+    _patch_caricature_model(monkeypatch, result=object())
     session = _patch_db_session(monkeypatch)
     monkeypatch.setattr(comments_service, "require_auth", lambda _session: 42)
     monkeypatch.setattr(comments_service, "CommentModel", DummyComment)
@@ -57,7 +60,7 @@ def test_add_comment_success(monkeypatch):
 
 
 def test_add_comment_empty_content(monkeypatch):
-    _patch_caricature_get(monkeypatch, result=object())
+    _patch_caricature_model(monkeypatch, result=object())
     monkeypatch.setattr(comments_service, "require_auth", lambda _session: 1)
 
     with pytest.raises(ServiceError) as exc:
@@ -67,8 +70,19 @@ def test_add_comment_empty_content(monkeypatch):
     assert exc.value.status == 400
 
 
+def test_add_comment_none_content(monkeypatch):
+    _patch_caricature_model(monkeypatch, result=object())
+    monkeypatch.setattr(comments_service, "require_auth", lambda _session: 1)
+
+    with pytest.raises(ServiceError) as exc:
+        comments_service.add_comment({}, 3, None)
+
+    assert exc.value.code == "EMPTY_COMMENT"
+    assert exc.value.status == 400
+
+
 def test_add_comment_too_long(monkeypatch):
-    _patch_caricature_get(monkeypatch, result=object())
+    _patch_caricature_model(monkeypatch, result=object())
     monkeypatch.setattr(comments_service, "require_auth", lambda _session: 1)
 
     with pytest.raises(ServiceError) as exc:
@@ -78,8 +92,23 @@ def test_add_comment_too_long(monkeypatch):
     assert exc.value.status == 400
 
 
+def test_add_comment_max_length(monkeypatch):
+    _patch_caricature_model(monkeypatch, result=object())
+    session = _patch_db_session(monkeypatch)
+    monkeypatch.setattr(comments_service, "require_auth", lambda _session: 1)
+    monkeypatch.setattr(comments_service, "CommentModel", DummyComment)
+
+    data, message = comments_service.add_comment({}, 10, "a" * 800)
+
+    assert data == {}
+    assert message == "Comment added."
+    assert session.committed is True
+    assert len(session.added) == 1
+    assert session.added[0].content == "a" * 800
+
+
 def test_add_comment_missing_caricature(monkeypatch):
-    _patch_caricature_get(monkeypatch, result=None)
+    _patch_caricature_model(monkeypatch, result=None)
     monkeypatch.setattr(comments_service, "require_auth", lambda _session: 1)
 
     with pytest.raises(ServiceError) as exc:

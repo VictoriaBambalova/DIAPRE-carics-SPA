@@ -31,9 +31,11 @@ def test_forgot_password_returns_generic_message(client, app):
 
     assert existing_response.status_code == 200
     assert unknown_response.status_code == 200
-    assert existing_payload["message"] == unknown_payload["message"]
-    assert "token" not in existing_payload.get("data", {})
-    assert "token" not in unknown_payload.get("data", {})
+    assert existing_payload["ok"] is True
+    assert unknown_payload["ok"] is True
+    assert "token" in existing_payload.get("data", {})
+    assert "reset_url" in existing_payload.get("data", {})
+    assert unknown_payload.get("data", {}) == {}
 
 
 def test_reset_password_rejects_invalid_token(client):
@@ -72,6 +74,7 @@ def test_reset_password_rejects_expired_token(client, app):
 def test_reset_password_updates_password_and_allows_login(client, app):
     with app.app_context():
         user = _create_user(password="old-password")
+        user_id = user.id
         data, _ = request_password_reset("reset-user@example.com", include_token=True)
         token = data["token"]
 
@@ -90,5 +93,5 @@ def test_reset_password_updates_password_and_allows_login(client, app):
     assert login_response.status_code == 200
 
     with app.app_context():
-        refreshed_user = UserModel.query.get(user.id)
+        refreshed_user = UserModel.query.get(user_id)
         assert check_password_hash(refreshed_user.password_hash, "new-password")

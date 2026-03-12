@@ -1,23 +1,23 @@
 from app.models.user import User
-from app.models.caricature import Caricature
+from app.models.caricature import CaricatureModel as Caricature
 
 
 def test_user():
-    print("=== Testing User ===")
     user = User(
         email="test@example.com",
         password_hash="pbkdf2:sha256:dummyhash",
         is_admin=True,
     )
 
-    print("Email:", user.email)
-    print("Is admin:", user.is_admin_user())
-    print("User dict:", user.to_dict())
-    print()
+    data = user.to_dict()
+
+    assert user.email == "test@example.com"
+    assert user.is_admin_user() is True
+    assert data["email"] == "test@example.com"
+    assert data["is_admin"] is True
 
 
 def test_caricature():
-    print("=== Testing Caricature ===")
     caricature = Caricature(
         title="Funny Developer",
         base_price=49.99,
@@ -25,13 +25,7 @@ def test_caricature():
         template_image_path="templates/dev.png",
     )
 
-    print("Title:", caricature.title)
-    print("Price:", caricature.get_price())
-    print("Has image:", caricature.has_template_image())
-    print("Caricature dict:", caricature.to_dict())
-    print()
-
-
-if __name__ == "__main__":
-    test_user()
-    test_caricature()
+    assert caricature.title == "Funny Developer"
+    assert float(caricature.base_price) == 49.99
+    assert caricature.description == "A funny caricature of a developer"
+    assert caricature.template_image_path == "templates/dev.png"
